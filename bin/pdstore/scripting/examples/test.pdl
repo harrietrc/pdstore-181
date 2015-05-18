@@ -1,0 +1,14 @@
+//Adding some triples
+(1,$11223344556677889900112233445566,3);
+($e7e24961afbe11e2bf4c1cc1dec00ed3, name, "testGuid");
+commit;  
+
+(testGuid, $11223344556677889900112233445566, 7);
+commit;  
+
+//Searching for one of the triples just added:
+(?x, $11223344556677889900112233445566, ?y)?
+//Printing all the GUIDs that have names:
+(?x, name, ?y)?
+commit;
+

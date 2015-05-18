@@ -1,0 +1,2 @@
+v401,vTa0,f, this is indirect,
+v420,vTa2,f, this is direct, using the same variable to store and load.

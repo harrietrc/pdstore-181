@@ -1,0 +1,8 @@
+v001,h000, next 4: testing that assignment goes only one way
+v021,h020,
+v401,h400,
+v421,h420,
+v001,h020, next 4: testing that assignment only along one dim
+v021,h000, note: also valid after load-store, 
+v401,h420,  since load does not affect cube variables.
+v421,h420, 

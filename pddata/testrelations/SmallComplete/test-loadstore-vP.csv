@@ -1,0 +1,18 @@
+v000,h000
+v001,h001
+v020,h020
+v021,h021
+v400,h400
+v401,h401
+v420,h420
+v421,h421
+vTa0,hTa0
+vTa2,hTa2
+v000,h001,start consequence of assign
+v020,h021
+v400,h401
+v420,h421
+vTa0,h000,consequence of store/load pairs
+vTa0,h001
+vTa2,h020
+vTa2,h021

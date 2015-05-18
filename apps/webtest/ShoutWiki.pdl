@@ -1,0 +1,24 @@
+// First, open a pdstore database.
+open shoutwiki;
+
+// Triples are simply written like sentences: subject predicate object;
+// No need to define GUID anymore; simply use the identifiers you need.
+
+StartAction page MainPage;
+MainPage action SearchAction;
+SearchAction field SearchKeyField;
+SearchKeyField inputType String;
+SearchKeyField inputData hello;
+
+SearchAction activates SearchResultsPage;
+
+// This is what a query looks like. 
+// It prints all instances that are connected using role hasAction.
+?x page ?y ?
+?x action ?y ?
+?x field ?y ?
+?x inputType ?y ?
+?x inputData ?y ?
+
+// Don't forget to commit to make all changes persistent.
+commit;

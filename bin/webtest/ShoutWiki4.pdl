@@ -1,0 +1,412 @@
+// First, open a pdstore database.
+open shoutwiki;
+
+// Triples are simply written like sentences: subject predicate object;
+// No need to define GUID anymore; simply use the identifiers you need.
+
+StartAction page MainPage;
+StartAction transition SMP;
+SMP page MainPage;
+SMP prob "1.0";
+
+MainPage transition ML;
+ML action Login;
+ML prob "1.0";
+
+MainPage action Login; 
+Login transition LMP;
+LMP page MainPage;
+LMP prob "0.2";
+Login transition LE;
+LE page Edit;
+LE prob "0.8";
+
+Password page MainPage;
+
+Password fieldType String;
+MainPage field LoginFail;
+LoginFail fieldType label;
+LoginFail page MainPage;
+
+Login page Edit;
+
+Login page MainPage;
+Login field Password;
+Login field UserName;
+Login field Email;
+Login field Captcha;
+Login field Realname;
+
+UserName fieldType String;
+Email fieldType String;
+Captcha fieldType String;
+Realname fieldType String;
+
+MainPage field TextArea;
+TextArea fieldType label;
+TextArea page MainPage;
+
+Edit action EnterText;
+EnterText page Edit;
+EnterText field EnterTextPane;
+
+Edit field LoginSuccess;
+LoginSuccess page Edit;
+LoginSuccess fieldType label;
+
+NormalText fieldType Button;
+EnterText field NormalText;
+
+BoldText fieldType Button;
+EnterText field BoldText;
+
+ItalicText fieldType Button;
+EnterText field ItalicText;
+
+Underline fieldType Button;
+EnterText field Underline;
+
+ExternalLink fieldType Button;
+EnterText field ExternalLink;
+
+
+Headline fieldType Button;
+EnterText field Headline;
+
+EmbeddedFile fieldType Button;
+EnterText field EmbeddedFile;
+
+Summary fieldType String;
+EnterText field Summary;
+
+EnterTextPane fieldType String;
+EnterText field EnterTextPane;
+
+
+Url fieldType Button;
+SelectType field Url;
+
+Edit field TextToDisplay;
+TextToDisplay fieldType label;
+TextToDisplay page Edit;
+
+SaveChangesButton action EnterText;
+EnterText field SaveChangesButton;
+SaveChangesButton fieldType Button;
+EnterText page MainPage;
+
+EnterText transition EE;
+EE page Edit;
+EE prob "0.4";
+
+EnterText transition EMP;
+EMP page MainPage;
+EMP prob "0.6";
+
+Edit transition EET;
+EET action EnterText;
+EET prob "1.0";
+
+
+
+// Test data
+MainPageData row row1;
+MainPageData row row2;
+MainPageData row row3;
+EditData row row4;
+EditData row row5;
+
+row1 contains cell1a;
+cell1a field UserName;
+cell1a data tom;
+cell1a xpath abcd;
+
+row1 contains cell2a;
+cell2a field Password;
+cell2a data Passw0rd;
+cell2a xpath abcd;
+
+row1 contains cell3a;
+cell3a field LoginSuccess;
+cell3a data Success;
+cell3a xpath abcd;
+
+row1 contains cell4a;
+cell4a field Email;
+cell4a data NA;
+row1 contains cell5a;
+cell5a field Captcha;
+cell5a data NA;
+row1 contains cell6a;
+cell6a field Realname;
+cell6a data NA;
+row1 contains cell7a;
+cell7a field NormalText;
+cell7a data NA;
+row1 contains cell8a;
+cell8a field BoldText;
+cell8a data NA;
+row1 contains cell9a;
+cell9a field ItalicText;
+cell9a data NA;
+row1 contains cell10a;
+cell10a field Underline;
+cell10a data NA;
+row1 contains cell11a;
+cell11a field ExternalLink;
+cell11a data NA;
+row1 contains cell12a;
+cell12a field Headline;
+cell12a data NA;
+row1 contains cell13a;
+cell13a field EmbeddedFile;
+cell13a  data NA;
+row1 contains cell14a;
+cell14a field Summary;
+cell14a  data NA;
+row1 contains cell15a;
+cell15a field Url;
+cell15a data NA;
+row1 transition LE;
+
+row2 contains cell1b;
+cell1b field UserName;
+cell1b data Fred;
+cell1b xpath abcd;
+
+row2 contains cell2b;
+cell2b field Password;
+cell2b data Wr0ng;
+cell2b xpath abcd;
+
+row2 contains cell3b;
+cell3b field LoginFail;
+cell3b data Failure;
+cell3b xpath abcx;
+
+row2 contains cell4b;
+cell4b field Email;
+cell4b data NA;
+row2 contains cell5b;
+cell5b field Captcha;
+cell5b data NA;
+row2 contains cell6b;
+cell6b field Realname;
+cell6b data NA;
+row2 contains cell7b;
+cell7b field NormalText;
+cell7b data NA;
+row2 contains cell8b;
+cell8b field BoldText;
+cell8b data NA;
+row2 contains cell9b;
+cell9b field ItalicText;
+cell9b data NA;
+row2 contains cell10b;
+cell10b field Underline;
+cell10b data NA;
+row2 contains cell11b;
+cell11b field ExternalLink;
+cell11b data NA;
+row2 contains cell12b;
+cell12b field Headline;
+cell12b data NA;
+row2 contains cell13b;
+cell13b field EmbeddedFile;
+cell13b  data NA;
+row2 contains cell14b;
+cell14b field Summary;
+cell14b  data NA;
+row2 contains cell15b;
+cell15b field Url;
+cell15b data NA;
+row2 transition LMP;
+
+row3 contains cell1c;
+cell1c field UserName;
+cell1c data empty;
+cell1c xpath abcd;
+row3 contains cell2c;
+cell2c field Password;
+cell2c data empty;
+cell2c xpath abcd;
+row3 contains cell3c;
+cell3c field LoginFail;
+cell3c xpath abcd;
+cell3c data Failure;
+row3 contains cell4c;
+cell4c field Email;
+cell4c data NA;
+row3 contains cell5c;
+cell5c field Captcha;
+cell5c data NA;
+row3 contains cell6c;
+cell6c field Realname;
+cell6c data NA;
+row3 contains cell7c;
+cell7c field NormalText;
+cell7c data NA;
+row3 contains cell8c;
+cell8c field BoldText;
+cell8c data NA;
+row3 contains cell9c;
+cell9c field ItalicText;
+cell9c data NA;
+row3 contains cell10c;
+cell10c field Underline;
+cell10c data NA;
+row3 contains cell11c;
+cell11c field ExternalLink;
+cell11c data NA;
+row3 contains cell12c;
+cell12c field Headline;
+cell12c data NA;
+row3 contains cell13c;
+cell13c field EmbeddedFile;
+cell13c  data NA;
+row3 contains cell14c;
+cell14c field Summary;
+cell14c  data NA;
+row3 contains cell15c;
+cell15c field Url;
+cell15c data NA;
+row3 transition LMP;
+
+row4 contains cell41;
+cell41 field UserName;
+cell41 data NA;
+
+row4 contains cell42;
+cell42 field Password;
+cell42 data NA;
+
+row4 contains cell44;
+cell44 field Email;
+cell44 data NA;
+
+row4 contains cell415;
+cell415 field Captcha;
+cell415 data NA;
+
+row4 contains cell45;
+cell45 field Realname;
+cell45 data NA;
+
+row4 contains cell46;
+cell46 field NormalText;
+cell46 data click;
+cell46 xpath normaltextefgh;
+
+row4 contains cell47;
+cell47 field BoldText;
+cell47 data click;
+cell47 xpath boldtextefgh;
+
+row4 contains cell48;
+cell48 field ItalicText;
+cell48 data NA;
+
+row4 contains cell49;
+cell49 field Underline;
+cell49 data NA;
+
+row4 contains cell410;
+cell410 field ExternalLink;
+cell410 data NA;
+row4 contains cell414;
+cell414 field Headline;
+cell414 data NA;
+row4 contains cell411;
+cell411 field EmbeddedFile;
+cell411  data NA;
+row4 contains cell412;
+cell412 field Summary;
+cell412  data NA;
+row4 contains cell413;
+cell413 field Url;
+cell413 data NA;
+row4 contains cell417;
+cell417 field EnterTextPane;
+cell417 data ThisisSampleText;
+cell417 xpath edfgabcd;
+row4 contains cell418;
+cell418 field TextArea;
+cell418 data ThisisSampleText;
+cell418 xpath qdfgasdd;
+row4 contains cell419;
+cell419 field SaveChangesButton;
+cell419 data click;
+cell419 xpath qwddd;
+row4 transition EE;
+
+row5 contains cell51;
+cell51 field UserName;
+cell51 data NA;
+row5 contains cell52;
+cell52 field Password;
+cell52 data NA;
+row5 contains cell54;
+cell54 field Email;
+cell54 data NA;
+row5 contains cell515;
+cell515 field Captcha;
+cell515 data NA;
+row5 contains cell55;
+cell55 field Realname;
+cell55 data NA;
+row5 contains cell56;
+cell56 field NormalText;
+cell56 data click;
+cell56 xpath normaltextefgh;
+row5 contains cell57;
+cell57 field BoldText;
+cell57 data NA;
+row5 contains cell58;
+cell58 field ItalicText;
+cell58 data click;
+cell58 xpath italictextefgh;
+row5 contains cell59;
+cell59 field Underline;
+cell59 data NA;
+row5 contains cell510;
+cell510 field ExternalLink;
+cell510 data NA;
+row5 contains cell514;
+cell514 field Headline;
+cell514 data NA;
+row5 contains cell511;
+cell511 field EmbeddedFile;
+cell511  data NA;
+row5 contains cell512;
+cell512 field Summary;
+cell512  data NA;
+row5 contains cell513;
+cell513 field Url;
+cell513 data NA;
+row5 contains cell517;
+cell517 field EnterTextPane;
+cell517 data ItalicSampleText;
+cell517 xpath abcd;
+row5 contains cell519;
+cell519 field SaveChangesButton;
+cell519 data click;
+cell519 xpath qwddd;
+cell518 field TextArea;
+cell518 data ItalicSampleText;
+cell518 xpath qdfgasdd;
+row5 contains cell518;
+row5 transition EMP;
+
+commit;
+
+// This is what a query looks like. 
+// It prints all instances that are connected using role hasAction.
+?x page ?y ?
+?x action ?y ?
+?x field ?y ?
+?x fieldType ?y ?
+
+?x prob ?y ?
+
+// Don't forget to commit to make all changes persistent.
+commit;
