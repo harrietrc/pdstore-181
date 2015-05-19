@@ -146,6 +146,9 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 		setCellRenderer(render);
 		addTreeExpansionListener(this);
 		addTreeWillExpandListener(this);
+		
+		// Registering this with the ToolTipManager will allow tooltips to be displayed on mouseover.
+		javax.swing.ToolTipManager.sharedInstance().registerComponent(this);
 
 		// register mouse listener to handle right-click popup menu interaction
 		final PDTreeView pdTreeView = this;
