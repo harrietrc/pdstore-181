@@ -66,7 +66,6 @@ public class PDTreeModel extends DefaultTreeModel implements
 			instanceNodeMap.put(rootInstance, node);
 			// recursively load children
 			node.doExpandNode(null);
-			System.out.println("hey");
 		}
 
 		// Not utilised at the moment... Would be nice if it was!
