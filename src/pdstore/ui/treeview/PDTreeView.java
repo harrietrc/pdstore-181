@@ -1,10 +1,13 @@
 package pdstore.ui.treeview;
 
+import java.awt.MouseInfo;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,8 +21,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
+import javax.swing.JToolTip;
 import javax.swing.JTree;
 import javax.swing.KeyStroke;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
+import javax.swing.ToolTipManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
 import javax.swing.event.TreeWillExpandListener;
@@ -28,7 +35,6 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
 import nz.ac.auckland.se.genoupe.tools.Debug;
-
 import pdstore.Blob;
 import pdstore.GUID;
 import pdstore.PDStore;
@@ -46,6 +52,8 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 
 	public TreeNode clipBoard;
 	public PDTreeRenderer render;
+	
+	public PDTreeToolTip tooltip; // Only one can be visible at once
 
 	/**
 	 * Creates an editable tree view of instances and roles. The tree view uses
@@ -63,6 +71,7 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 				"The PDTreeView arguments must not be null.");
 		this.store = store;
 		render = new PDTreeRenderer(store);
+		tooltip = new PDTreeToolTip();
 		/*
 		 * Internally the tree view works only with GUIDs. So if a root instance
 		 * is given as DAL object (subclass of PDInstance), then use its GUID
@@ -146,9 +155,6 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 		setCellRenderer(render);
 		addTreeExpansionListener(this);
 		addTreeWillExpandListener(this);
-		
-		// Registering this with the ToolTipManager will allow tooltips to be displayed on mouseover.
-		javax.swing.ToolTipManager.sharedInstance().registerComponent(this);
 
 		// register mouse listener to handle right-click popup menu interaction
 		final PDTreeView pdTreeView = this;
@@ -160,6 +166,34 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 					if (selected != null) {
 						((PDTreeNode) selected).contextMenu(pdTreeView,
 								e.getX(), e.getY());
+					}
+				}
+			}
+		});
+		
+		// Register a mouse listener to change the tooltip that is displayed when hovering over a node
+		addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent e) {
+				int x = (int) e.getX();
+				int y = (int) e.getY();
+				TreePath path = getPathForLocation(x, y);
+				if (path == null) {
+					tooltip.hide();
+				} else {
+					TreeNode node = (TreeNode) path.getLastPathComponent();
+					tooltip.setHoveredNode(node);
+					
+					if (!tooltip.isVisible) {
+						// getX() and getY() return positions relative to the source component. Get the absolute position
+						int absX = e.getXOnScreen();
+						int absY = e.getYOnScreen();
+						
+						// Show the tooltip
+						final Popup tooltipContainer = PopupFactory.getSharedInstance().getPopup(PDTreeView.this, 
+								tooltip, absX, absY);
+						tooltip.setToolTipContainer(tooltipContainer);
+						tooltip.show();
 					}
 				}
 			}
