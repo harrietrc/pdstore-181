@@ -165,6 +165,18 @@ public class InstanceNode extends PDTreeNode implements TreeNode {
 		"<font color='#b48484'>:"+typeName+"</font></html>"; 
 		return text;
 	}
+	
+	/**
+	 * Returns a string representation of the node that is not contained within html tags. Used  in tooltips 
+	 * when a number of nodes are represented as text, and should therefore be contained in a single set of 
+	 * html tags.
+	 * @return A string representation of the node
+	 */
+	public String toStringNoHtmlTags() {
+		String text = "<font color='#00308d'>"+(instanceName != null ? instanceName: "")+"</font>" +   
+		"<font color='#b48484'>:"+typeName+"</font>"; 
+		return text;
+	}
 
 	public String getTypeName() {
 		return typeName;

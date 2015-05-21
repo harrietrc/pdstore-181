@@ -178,11 +178,13 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 				int x = (int) e.getX();
 				int y = (int) e.getY();
 				TreePath path = getPathForLocation(x, y);
-				if (path == null) {
+				
+				// Don't show the tooltip for the root node - don't see much point showing its contents.
+				if (path == null || path.getLastPathComponent() instanceof PDRootNode) {
 					tooltip.hide();
 				} else {
 					TreeNode node = (TreeNode) path.getLastPathComponent();
-					tooltip.setHoveredNode(node);
+					tooltip.setHoveredNode(node); // Allows the tooltip instance to get information about the tree
 					
 					if (!tooltip.isVisible) {
 						// getX() and getY() return positions relative to the source component. Get the absolute position
@@ -193,7 +195,7 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 						final Popup tooltipContainer = PopupFactory.getSharedInstance().getPopup(PDTreeView.this, 
 								tooltip, absX, absY);
 						tooltip.setToolTipContainer(tooltipContainer);
-						tooltip.setTipTextFromTree();
+						tooltip.setTipTextFromTree(); // Generates text for the tooltip, traversing the subtree.
 						tooltip.show();
 					}
 				}

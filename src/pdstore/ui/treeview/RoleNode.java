@@ -203,6 +203,17 @@ public abstract class RoleNode extends PDTreeNode {
 
 	@Override
 	public String toString() {
+		String nodeString = toStringNoHtmlTags();
+		return "<html>"+nodeString+"</html>";  
+	}
+	
+	/**
+	 * Slightly altered version of previous version of toString; returns a string representation without the
+	 * outer <html></html> tags. Used in tooltips when a number of nodes are represented as text, and should
+	 * therefore be contained in a single set of html tags.
+	 * @return A string representation of the node
+	 */
+	public String toStringNoHtmlTags() {
 		final GUID role = getRole();
 		GUID transaction = treeView.store.begin();
 		GUID objectType = treeView.store.getOwnerType(transaction, role);
@@ -214,7 +225,7 @@ public abstract class RoleNode extends PDTreeNode {
 			typeName = treeView.store.getName(transaction, objectType);
 		}
 		treeView.store.commit(transaction);
-		return "<html><font color='#00308d'>"+roleName+"</font><font color='#b48484'>:"+typeName+"</font></html>";  
+		return "<font color='#00308d'>"+roleName+"</font><font color='#b48484'>:"+typeName+"</font>";
 	}
 	
 	@Override

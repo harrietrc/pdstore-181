@@ -1,8 +1,6 @@
 package pdstore.ui.treeview;
 
 import java.util.Enumeration;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.swing.JToolTip;
 import javax.swing.Popup;
@@ -13,68 +11,50 @@ public class PDTreeToolTip extends JToolTip {
 	private static final long serialVersionUID = 5752654103079748810L;
 	
 	// Settings
-	public int maxLines; // The maximum number of lines to display in the tooltip
+	private int maxDepth; // The maximum number of lines to display in the tooltip
+	// TODO If this is unlimited, infinite recursion will occur - not ideal and should be fixed (or enforced).
 	
 	private Popup container; // The container for the tooltip that allows it to be shown or hidden
 	
 	// Tooltip state
 	private TreeNode hoveredNode; // The node that is being hovered over
 	public boolean isVisible; // Whether the tooltip is currently visible TODO getter/setter?
-	
-	// 
-	private StringBuilder tipTextBuilder;
-	private Set<Object> cyclicalNodeValues;
+	private StringBuilder tipTextBuilder; // Tooltip text - added to as subtree is traversed.
 	
 	public PDTreeToolTip() {
 		super();
-		this.maxLines = 10;
+		this.maxDepth = 4;
 		isVisible = false;
-
-		setTipText("HEY");
 	}
 	
 	/**
 	 * TODO extensive javadoc here
 	 */
-	private void generateTipText(TreeNode node) {
-		
-		boolean iterateChildren = true; // True if we should recurse over the node's children
-		
-		// 
-		if (node instanceof InstanceNode) {
-			InstanceNode instNode = (InstanceNode) node;
-			Object nodeValue = instNode.getValue();
-			if (cyclicalNodeValues.contains(nodeValue))
-				iterateChildren = false;
-			if (instNode.isCyclical()) {
-				// We need to keep track of whether this node has been encountered in the tree before
-				cyclicalNodeValues.add(nodeValue);
-			} else {
-				// Node has been encountered before; stop recursing, as recursion will be infinite.
-				if (cyclicalNodeValues.contains(nodeValue))
-					iterateChildren = false;
+	private void generateTipText(TreeNode node, int currentDepth) {
+		// Children may be null - expand the list of children so that the subtree can be traversed.
+		if (node instanceof PDTreeNode) {
+			try {
+				((PDTreeNode) node).treeWillExpand(null);
+			} catch (ExpandVetoException e) {
+				e.printStackTrace();
 			}
 		}
 		
-		if (iterateChildren)
-			if (node instanceof PDTreeNode) {
-				try {
-					((PDTreeNode) node).treeWillExpand(null);
-				} catch (ExpandVetoException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		// Add a representation of this node to the tooltip
+		String nodeText = getTextFromNode(node);
+		for (int i=0; i< currentDepth; i++) // Add a suitable indent
+			tipTextBuilder.append("&nbsp;&nbsp;&nbsp;&nbsp;");
+		tipTextBuilder.append("  " + nodeText + "<br>");
+		
+		Enumeration children = node.children();
+		
+		// Recurse through the subtree getting representations of the nodes until the maximum depth is reached.
+		if (children != null && currentDepth <= maxDepth) {
+			currentDepth++;
+			while (children.hasMoreElements()) {
+				generateTipText((TreeNode) children.nextElement(), currentDepth);
 			}
-			
-			Enumeration children = node.children();
-			
-			if (children != null) {
-				while (children.hasMoreElements()) {
-					String nodeText = getTextFromNode(node);
-					tipTextBuilder.append(nodeText);
-					generateTipText((TreeNode) children.nextElement());
-				}
-			}
+		}
 	}
 	
 	/**
@@ -82,38 +62,29 @@ public class PDTreeToolTip extends JToolTip {
 	 * @return Text that should represent the node in the tooltip.
 	 */
 	private String getTextFromNode(TreeNode node) {
-		String nodeText;
+		String nodeText = null;
 		
 		if (node instanceof InstanceNode) {
 			InstanceNode instNode = (InstanceNode) node;
-			nodeText = instNode.toString();
+			nodeText = instNode.toStringNoHtmlTags();
 		} 
-		else if (node instanceof PrimitiveRoleNode) {
-			PrimitiveRoleNode primNode = (PrimitiveRoleNode) node;
-			nodeText = primNode.toString();
-		}
-		else if (node instanceof ComplexRoleNode) {
-			ComplexRoleNode compNode = (ComplexRoleNode) node;
-			nodeText = compNode.toString();
+		else if (node instanceof RoleNode) {
+			RoleNode compNode = (RoleNode) node;
+			nodeText = compNode.toStringNoHtmlTags();
 		} 
-		else if (node instanceof PDRootNode) {
-			PDRootNode rootNode = (PDRootNode) node;
-			nodeText = rootNode.toString();
-		} else {
-			nodeText = "other";
-		}
-		System.out.println(nodeText);
+
 		return nodeText;
 	}
 	
 	/**
-	 * Sets the tooltip's text by generating it from the nodes.
+	 * Sets the tooltip's text by generating it from the nodes. JToolTip allows formatting through HTML, so
+	 * the text is marked up using HTML.
 	 */
 	public void setTipTextFromTree() {
-		tipTextBuilder = new StringBuilder();
-		cyclicalNodeValues = new HashSet<Object>();
+		tipTextBuilder = new StringBuilder("<html>");
+		generateTipText(hoveredNode, 0); // Recurses through the subtree, adding node information
+		tipTextBuilder.append("</html>");
 		
-		generateTipText(hoveredNode);
 		String tipText = tipTextBuilder.toString();
 		setTipText(tipText);
 	}
@@ -146,7 +117,4 @@ public class PDTreeToolTip extends JToolTip {
 		hoveredNode = node;
 	}
 	
-	// TODO Should this be able to access doExpandNode directly?
-	
-
 }
