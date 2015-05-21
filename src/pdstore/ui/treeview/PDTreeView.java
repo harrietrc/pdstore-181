@@ -193,6 +193,7 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 						final Popup tooltipContainer = PopupFactory.getSharedInstance().getPopup(PDTreeView.this, 
 								tooltip, absX, absY);
 						tooltip.setToolTipContainer(tooltipContainer);
+						tooltip.setTipTextFromTree();
 						tooltip.show();
 					}
 				}
