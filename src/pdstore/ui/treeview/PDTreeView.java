@@ -1,8 +1,11 @@
 package pdstore.ui.treeview;
 
+import java.awt.Component;
 import java.awt.MouseInfo;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
@@ -26,6 +29,7 @@ import javax.swing.JTree;
 import javax.swing.KeyStroke;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
+import javax.swing.SwingUtilities;
 import javax.swing.ToolTipManager;
 import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeExpansionListener;
@@ -195,14 +199,13 @@ public class PDTreeView extends JTree implements TreeExpansionListener,
 						final Popup tooltipContainer = PopupFactory.getSharedInstance().getPopup(PDTreeView.this, 
 								tooltip, absX, absY);
 						tooltip.setToolTipContainer(tooltipContainer);
-						tooltip.setTipTextFromTree(); // Generates text for the tooltip, traversing the subtree.
 						tooltip.show();
 					}
 				}
 			}
 		});
 	}
-
+	
 	PDTreeModel getPDTreeModel() {
 		return (PDTreeModel) getModel();
 	}
